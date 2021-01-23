@@ -12,6 +12,7 @@
         @endisset
 
         <!-- Styles -->
+        <link rel="shortcut icon" href="{{ asset('images/logotok.png') }}" >
         <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans&family=Nunito:wght@400;600;700&family=Open+Sans&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="{{ asset('vendor/bootstrap.min.css') }}">
         <link rel="stylesheet" href="{{ asset('css/tailwind.css') }}">
@@ -73,6 +74,8 @@
         <script src="{{ asset('stisla/js/scripts.js') }}"></script>
 
         <livewire:scripts />
+        <script src="https://cdn.jsdelivr.net/gh/livewire/turbolinks@v0.1.x/dist/livewire-turbolinks.js" data-turbolinks-eval="false" data-turbo-eval="false"></script>
+
         <script src="{{ mix('js/app.js') }}" defer></script>
 
         @isset($script)

@@ -1,22 +1,77 @@
 @php
-$links = [
+$links = 
+[
     [
-        "href" => "dashboard",
-        "text" => "Dashboard",
+        "header_text" => "Dashboard",
         "is_multi" => false,
+        "list" =>
+        [
+            [
+                "text" => "Dashboard",
+                "icon" => "fab fa-gripfire",
+                "href" => "dashboard",
+                "is_dropdown" => false,
+            ],
+        ],  
     ],
     [
-        "href" => [
+        "header_text" => "Admin User",
+        "is_multi" => true,
+        "href" => 
+        [
             [
                 "section_text" => "User",
-                "section_list" => [
+                "section_icon" => "far fa-user",
+                "section_list" => 
+                [
                     ["href" => "user", "text" => "Data User"],
                     ["href" => "user.new", "text" => "Buat User"]
                 ]
             ]
         ],
-        "text" => "User",
-        "is_multi" => true,
+    ],
+    [
+        "header_text" => "Kopsis Binus",
+        "is_multi" => false,
+        "list" => 
+        [
+            [
+                "is_dropdown" => true,
+                "href" => 
+                [
+                    [
+                        "section_text" => "Barang",
+                        "section_icon" => "far fa-plus-square",
+                        "section_list" => 
+                        [
+                            ["href" => "barang", "text" => "Data Barang"],
+                            ["href" => "stok", "text" => "Stok Barang"],
+                        ]
+                    ],
+                    // [
+                    //     "section_text" => "Laporan",
+                    //     "section_icon" => "far fa-bookmark",
+                    //     "section_list" => 
+                    //     [
+                    //         ["href" => "laporanpemasukan", "text" => "Pemasukan"],
+                    //         ["href" => "laporankeuangan", "text" => "Keuangan"]
+                    //     ]
+                    // ]
+                ],
+            ],
+            [
+                "text" => "Pegawai",
+                "icon" => "far fa-address-book",
+                "href" => "barang",
+                "is_dropdown" => false,
+            ],
+            [
+                "text" => "Keterangan",
+                "icon" => "fas fa-tags",
+                "href" => "barang",
+                "is_dropdown" => false,
+            ]
+        ],
     ],
 ];
 $navigation_links = array_to_object($links);
@@ -25,7 +80,7 @@ $navigation_links = array_to_object($links);
 <div class="main-sidebar">
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
-            <a href="{{ route('dashboard') }}">Dashboard</a>
+            <a href="{{ route('dashboard') }}">Kopsis Binus</a>
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
             <a href="{{ route('dashboard') }}">
@@ -34,11 +89,34 @@ $navigation_links = array_to_object($links);
         </div>
         @foreach ($navigation_links as $link)
         <ul class="sidebar-menu">
-            <li class="menu-header">{{ $link->text }}</li>
+            <li class="menu-header">{{ $link->header_text }}</li>
             @if (!$link->is_multi)
-            <li class="{{ Request::routeIs($link->href) ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route($link->href) }}"><i class="fas fa-fire"></i><span>Dashboard</span></a>
-            </li>
+                @foreach ($link->list as $lists)
+                    @if (!$lists->is_dropdown)
+                        <li class="{{ Request::routeIs($lists->href) ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ route($lists->href) }}"><i class="{{ $lists->icon }}"></i><span>{{ $lists->text }}</span></a>
+                        </li>
+                    @else
+                        @foreach ($lists->href as $section)
+                            @php
+                            $routes = collect($section->section_list)->map(function ($child) {
+                                return Request::routeIs($child->href);
+                            })->toArray();
+
+                            $is_active = in_array(true, $routes);
+                            @endphp
+
+                            <li class="dropdown {{ ($is_active) ? 'active' : '' }}">
+                                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="{{ $section->section_icon }}"></i> <span>{{ $section->section_text }}</span></a>
+                                <ul class="dropdown-menu">
+                                    @foreach ($section->section_list as $child)
+                                        <li class="{{ Request::routeIs($child->href) ? 'active' : '' }}"><a class="nav-link" href="{{ route($child->href) }}">{{ $child->text }}</a></li>
+                                    @endforeach
+                                </ul>
+                            </li>
+                        @endforeach
+                    @endif
+                @endforeach
             @else
                 @foreach ($link->href as $section)
                     @php
@@ -50,7 +128,7 @@ $navigation_links = array_to_object($links);
                     @endphp
 
                     <li class="dropdown {{ ($is_active) ? 'active' : '' }}">
-                        <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-chart-bar"></i> <span>{{ $section->section_text }}</span></a>
+                        <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="{{ $section->section_icon }}"></i> <span>{{ $section->section_text }}</span></a>
                         <ul class="dropdown-menu">
                             @foreach ($section->section_list as $child)
                                 <li class="{{ Request::routeIs($child->href) ? 'active' : '' }}"><a class="nav-link" href="{{ route($child->href) }}">{{ $child->text }}</a></li>
