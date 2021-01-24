@@ -28,4 +28,5 @@ Route::group(["middleware" => ['auth:sanctum', 'verified']], function () {
 
     Route::get('/barang', [KopsisController::class, "barang"])->name('barang');
     Route::get('/stok', [KopsisController::class, "stok"])->name('stok');
+    Route::get('/pembelian', [KopsisController::class, "pembelian"])->name('pembelian');
 });

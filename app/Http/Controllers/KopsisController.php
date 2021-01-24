@@ -20,4 +20,19 @@ class KopsisController extends Controller
             'stok' => Stok::class
         ]);
     }
+    public function pembelian()
+    {
+        return view('pages.kopsis.pembelian-data', [
+            'pembelian' => Stok::class
+        ]);
+    }
+    // menampilkan isi session
+    public function tampilkanSession(Request $request)
+    {
+        if ($request->session()->has('name')) {
+            echo $request->session()->get('name');
+        } else {
+            echo 'Tidak ada data dalam session.';
+        }
+    }
 }

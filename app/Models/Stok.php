@@ -17,7 +17,7 @@ class Stok extends Model
     public static function search($query)
     {
         return empty($query) ? static::query()
-            : static::where('nama', 'like', '%' . $query . '%')
-            ->orWhere('keterangan', 'like', '%' . $query . '%');
+            : static::where('barang.namabarang', 'like', '%' . $query . '%')
+            ->orWhere('barang.keterangan', 'like', '%' . $query . '%');
     }
 }

@@ -15,10 +15,12 @@ class Stok extends Migration
     {
         Schema::create('stok', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->date('tanggal');
             $table->foreignId('barang_id');
             $table->integer('jumlah');
             $table->integer('hargabeli');
             $table->integer('hargajual');
+            $table->text('user');
             $table->timestamps();
         });
     }
@@ -30,6 +32,6 @@ class Stok extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('stok');
     }
 }

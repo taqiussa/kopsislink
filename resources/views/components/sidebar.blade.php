@@ -40,23 +40,23 @@ $links =
                 "href" => 
                 [
                     [
-                        "section_text" => "Barang",
-                        "section_icon" => "far fa-plus-square",
+                        "section_text" => "Transaksi",
+                        "section_icon" => "fas fa-chart-bar",
+                        "section_list" => 
+                        [
+                            ["href" => "pembelian", "text" => "Pembelian"],
+                            ["href" => "stok", "text" => "Penjualan"]
+                        ]
+                    ],
+                    [
+                        "section_text" => "Data",
+                        "section_icon" => "fas fa-tasks",
                         "section_list" => 
                         [
                             ["href" => "barang", "text" => "Data Barang"],
-                            ["href" => "stok", "text" => "Stok Barang"],
+                            ["href" => "stok", "text" => "Data Stok"],
                         ]
                     ],
-                    // [
-                    //     "section_text" => "Laporan",
-                    //     "section_icon" => "far fa-bookmark",
-                    //     "section_list" => 
-                    //     [
-                    //         ["href" => "laporanpemasukan", "text" => "Pemasukan"],
-                    //         ["href" => "laporankeuangan", "text" => "Keuangan"]
-                    //     ]
-                    // ]
                 ],
             ],
             [

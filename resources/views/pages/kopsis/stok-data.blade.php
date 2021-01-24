@@ -10,6 +10,6 @@
     </x-slot>
 
     <div>
-        <livewire:table.kopsis name="stok" :model="$stok" />
+        <livewire:table.tablestok name="stok" :model="$stok" />
     </div>
 </x-app-layout>

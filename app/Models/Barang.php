@@ -19,7 +19,7 @@ class Barang extends Model
     public static function search($query)
     {
         return empty($query) ? static::query()
-            : static::where('nama', 'like', '%' . $query . '%')
+            : static::where('namabarang', 'like', '%' . $query . '%')
             ->orWhere('keterangan', 'like', '%' . $query . '%');
     }
 }

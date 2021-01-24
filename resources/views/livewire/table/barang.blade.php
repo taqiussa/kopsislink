@@ -1,5 +1,5 @@
 <div>
-    <x-data-table :data="$data" :model="$barangs">
+    <x-data-table2 :data="$data" :model="$barangs">
         <x-slot name="head">
             <tr>
                 <th><a wire:click.prevent="sortBy('id')" role="button" href="#">
@@ -22,18 +22,22 @@
             </tr>
         </x-slot>
         <x-slot name="body">
-            @foreach ($barangs as $barang)
+            @foreach ($barangs as $key => $barang)
                 <tr x-data="window.__controller.dataTableController({{ $barang->id }})">
-                    <td>{{ $barang->id }}</td>
+                    <td>{{ $barangs->firstItem() + $key }}</td>
                     <td>{{ $barang->namabarang }}</td>
                     <td>{{ $barang->keterangan }}</td>
                     <td>{{ $barang->created_at->format('d M Y H:i') }}</td>
                     <td class="whitespace-no-wrap row-action--icon">
-                        <a role="button" href="/barang/edit/{{ $barang->id }}" class="mr-3"><i class="fa fa-16px fa-pen"></i></a>
+                        <a role="button" wire:click="edit({{ $barang->id }})" class="mr-3"><i class="fa fa-16px fa-pen"></i></a>
                         <a role="button" x-on:click.prevent="deleteItem" href="#"><i class="text-red-500 fa fa-16px fa-trash"></i></a>
                     </td>
                 </tr>
             @endforeach
         </x-slot>
-    </x-data-table>
+    </x-data-table2>
+    <x-notify-message on="saved" type="success" :message="__($button['submit_response_notyf'])" />
+    @if ($isOpen)
+    @include('livewire.modal.modal-barang')
+    @endif
 </div>
