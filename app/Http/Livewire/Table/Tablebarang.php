@@ -27,13 +27,21 @@ class Tablebarang extends Component
     public $barang;
     public $idbarang;
     public $namabarang;
+    public $hargabeli;
+    public $hargajual;
     public $keterangan;
 
     protected $rules = [
         'namabarang' => 'required',
+        'hargabeli' => 'required|numeric',
+        'hargajual' => 'required|numeric',
     ];
     protected $messages = [
         'namabarang.required' => 'Nama Barang Harus di isi',
+        'hargabeli.required' => 'Harga Beli Harus di isi',
+        'hargabeli.numeric' => 'Harga Beli Harus berupa angka',
+        'hargajual.numeric' => 'Harga Jual Harus berupa angka',
+        'hargajual.required' => 'Harga Jual Harus di isi',
     ];
     protected $listeners = ["deleteItem" => "delete_item"];
 
@@ -42,6 +50,7 @@ class Tablebarang extends Component
     public function showModal()
     {
         $this->isOpen = true;
+        //$cek = Auth::user()->name;
     }
     public function hideModal()
     {
@@ -81,33 +90,6 @@ class Tablebarang extends Component
                     ])
                 ];
                 break;
-
-            case 'stok':
-                $stoks = $this->model::search($this->search)
-                    ->join('barang', 'barang.id', '=', 'stok.barang_id')
-                    ->select(
-                        'barang.namabarang as namabarang',
-                        'stok.id as id',
-                        'stok.hargabeli as hargabeli',
-                        'stok.hargajual as hargajual',
-                        'stok.jumlah as jumlah',
-                    )
-                    ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
-                    ->paginate($this->perPage);
-
-                return [
-                    "view" => 'livewire.table.stok',
-                    "stoks" => $stoks,
-                    "data" => array_to_object([
-                        'href' => [
-                            'create_new' => route('stok'),
-                            'create_new_text' => 'Buat stok Baru',
-                            'export' => '#',
-                            'export_text' => 'Export'
-                        ]
-                    ])
-                ];
-                break;
             default:
                 # code...
                 break;
@@ -117,6 +99,8 @@ class Tablebarang extends Component
     {
 
         $this->namabarang = '';
+        $this->hargabeli = '';
+        $this->hargajual = '';
         $this->keterangan = '';
         // $this->tanggal = gmdate('Y-m-d');
 
@@ -125,7 +109,10 @@ class Tablebarang extends Component
     {
         $data = [
             'namabarang' => $this->namabarang,
+            'hargabeli' => $this->hargabeli,
+            'hargajual' => $this->hargajual,
             'keterangan' => $this->keterangan,
+            'user' => Auth::user()->name,
         ];
         $this->validate();
         $this->model::updateOrCreate(['id' => $this->idbarang], $data);
@@ -138,7 +125,9 @@ class Tablebarang extends Component
         $cari = $this->model::findOrFail($id);
         $this->idbarang = $id;
         // $this->tanggal = date('Y-m-d', strtotime($cari->tanggal));
-        $this->nama = $cari->nama;
+        $this->namabarang = $cari->namabarang;
+        $this->hargabeli = $cari->hargabeli;
+        $this->hargajual = $cari->hargajual;
         $this->keterangan = $cari->keterangan;
         $this->showModal();
     }

@@ -26,13 +26,4 @@ class KopsisController extends Controller
             'pembelian' => Stok::class
         ]);
     }
-    // menampilkan isi session
-    public function tampilkanSession(Request $request)
-    {
-        if ($request->session()->has('name')) {
-            echo $request->session()->get('name');
-        } else {
-            echo 'Tidak ada data dalam session.';
-        }
-    }
 }

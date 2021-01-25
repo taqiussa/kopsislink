@@ -9,7 +9,7 @@
                 <div class="px-4 pt-5 pb-4 bg-white sm:p-6 sm:pb-4">
                     <div class="text-center">
                         <h4>
-                            Tambah Barang
+                            Pembelian Barang
                         </h4>
                     </div>
                     <div>
@@ -18,20 +18,6 @@
                             <input wire:model="idbarang" type="hidden" class="w-full px-2 py-2 border rounded shadow appearance-non" id="namabarang" >
                             <input wire:model.defer="namabarang" type="text" class="w-full px-2 py-2 border rounded shadow appearance-non" id="namabarang" autocomplete="off" >
                             @error('namabarang')
-                            <h1 class="text-red-500">{{ $message }}</h1>
-                            @enderror
-                        </div>
-                        <div class="py-2">
-                            <label for="hargabeli">Harga Beli</label>
-                            <input wire:model.defer="hargabeli" type="text" class="w-full px-2 py-2 border rounded shadow appearance-non" id="hargabeli" autocomplete="off" >
-                            @error('hargabeli')
-                            <h1 class="text-red-500">{{ $message }}</h1>
-                            @enderror
-                        </div>
-                        <div class="py-2">
-                            <label for="hargajual">Harga Jual</label>
-                            <input wire:model.defer="hargajual" type="text" class="w-full px-2 py-2 border rounded shadow appearance-non" id="hargajual" autocomplete="off" >
-                            @error('hargajual')
                             <h1 class="text-red-500">{{ $message }}</h1>
                             @enderror
                         </div>
