@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Barang;
+use App\Models\Pembelian;
 use App\Models\Stok;
 
 class KopsisController extends Controller
@@ -23,7 +24,7 @@ class KopsisController extends Controller
     public function pembelian()
     {
         return view('pages.kopsis.pembelian-data', [
-            'pembelian' => Stok::class
+            'pembelian' => Pembelian::class
         ]);
     }
 }

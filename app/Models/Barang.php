@@ -15,7 +15,10 @@ class Barang extends Model
     {
         return $this->hasOne(Stok::class, 'barang_id');
     }
-
+    public function pembelian()
+    {
+        return $this->hasMany(Pembelian::class, 'barang_id');
+    }
     public static function search($query)
     {
         return empty($query) ? static::query()

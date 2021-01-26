@@ -6,7 +6,11 @@ use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Http\Controllers\KopsisController;
+use App\Models\Barang;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Livewire\Table\Konversi;
+use App\Models\Pembelian;
+use App\Models\Stok;
 
 class Tablepembelian extends Component
 {
@@ -26,20 +30,26 @@ class Tablepembelian extends Component
     //Pembelian
     public $pembelian;
     public $idpembelian;
-    public $namabarang;
-    public $jumlah;
+    public $tanggal;
+    public $barang_id;
     public $hargabeli;
-    public $hargajual;
+    public $total;
+    public $bayar;
+    public $kembali;
+    public $jumlah;
 
     protected $rules = [
-        'namabarang' => 'required',
+        'barang_id' => 'required',
+        'tanggal' => 'required',
+        'jumlah' => 'required|numeric',
     ];
     protected $messages = [
-        'namabarang.required' => 'Nama Barang Harus di isi',
+        'barang_id.required' => 'Nama Barang Harus di isi',
+        'jumlah.numeric' => 'Jumlah Harus Berupa Angka',
+        'jumlah.required' => 'Jumlah Barang Harus di isi',
+        'tanggal.required' => 'Tanggal Harus di isi',
     ];
     protected $listeners = ["deleteItem" => "delete_item"];
-
-
 
     public function showModal()
     {
@@ -66,51 +76,40 @@ class Tablepembelian extends Component
     public function get_pagination_data()
     {
         switch ($this->name) {
-            case 'barang':
-                $barangs = $this->model::search($this->search)
-                    ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
-                    ->paginate($this->perPage);
-
-                return [
-                    "view" => 'livewire.table.barang',
-                    "barangs" => $barangs,
-                    "data" => array_to_object([
-                        'href' => [
-                            'create_new' => 'showModal()',
-                            'create_new_text' => 'Buat Barang Baru',
-                            'export' => '#',
-                            'export_text' => 'Export'
-                        ]
-                    ])
-                ];
-                break;
-
-            case 'stok':
-                $stoks = $this->model::search($this->search)
-                    ->join('barang', 'barang.id', '=', 'stok.barang_id')
+            case 'pembelian':
+                $pembelians = $this->model::search($this->search)
+                    ->join('barang', 'barang.id', '=', 'pembelian.barang_id')
                     ->select(
                         'barang.namabarang as namabarang',
-                        'stok.id as id',
-                        'stok.hargabeli as hargabeli',
-                        'stok.hargajual as hargajual',
-                        'stok.jumlah as jumlah',
+                        'pembelian.id as id',
+                        'pembelian.jumlah as jumlah',
+                        'pembelian.total as total',
+                        'pembelian.tanggal as tanggal',
+                        'pembelian.user as user',
                     )
                     ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                     ->paginate($this->perPage);
-
+                $barang = Barang::get();
+                if (!empty($this->barang_id)) {
+                    $cari = Barang::find($this->barang_id);
+                    $this->hargabeli = Konversi::rupiah($cari->hargabeli);
+                }
+                $this->total = Konversi::rupiah(intval($this->jumlah) * intval(Konversi::angka($this->hargabeli)));
                 return [
-                    "view" => 'livewire.table.stok',
-                    "stoks" => $stoks,
+                    "view" => 'livewire.table.pembelian',
+                    "pembelians" => $pembelians,
+                    'barang' => $barang,
                     "data" => array_to_object([
                         'href' => [
-                            'create_new' => route('stok'),
-                            'create_new_text' => 'Buat stok Baru',
+                            'create_new' => 'showModal()',
+                            'create_new_text' => 'Pembelian',
                             'export' => '#',
                             'export_text' => 'Export'
                         ]
                     ])
                 ];
                 break;
+
             default:
                 # code...
                 break;
@@ -119,19 +118,30 @@ class Tablepembelian extends Component
     public function clearVar()
     {
 
-        $this->namabarang = '';
-        $this->keterangan = '';
-        // $this->tanggal = gmdate('Y-m-d');
-
+        $this->barang_id = '';
+        $this->jumlah = '';
+        $this->hargabeli = '';
+        $this->total = '';
+        $this->jumlah = '';
+        $this->tanggal = gmdate('Y-m-d');
     }
     public function store()
     {
         $data = [
-            'namabarang' => $this->namabarang,
-            'keterangan' => $this->keterangan,
+            'barang_id' => $this->barang_id,
+            'total' => Konversi::angka($this->total),
+            'jumlah' => $this->jumlah,
+            'tanggal' => $this->tanggal,
+            'user' => Auth::user()->name,
         ];
         $this->validate();
-        $this->model::updateOrCreate(['id' => $this->idbarang], $data);
+        $this->model::updateOrCreate(['id' => $this->idpembelian], $data);
+        $jumlahstok = Pembelian::where('barang_id', $this->barang_id)->sum('jumlah');
+        $datastok = [
+            'barang_id' => $this->barang_id,
+            'jumlah' => $jumlahstok,
+        ];
+        Stok::updateOrCreate(['barang_id' => $this->barang_id], $datastok);
         $this->clearVar();
         $this->emit('saved'); /* Untuk Menampilkan Message Toast ke x-jet-nofity-message di modal */
         $this->hideModal();
@@ -139,10 +149,10 @@ class Tablepembelian extends Component
     public function edit($id)
     {
         $cari = $this->model::findOrFail($id);
-        $this->idbarang = $id;
-        // $this->tanggal = date('Y-m-d', strtotime($cari->tanggal));
-        $this->nama = $cari->nama;
-        $this->keterangan = $cari->keterangan;
+        $this->idpembelian = $id;
+        $this->tanggal = date('Y-m-d', strtotime($cari->tanggal));
+        $this->barang_id = $cari->barang_id;
+        $this->jumlah = $cari->jumlah;
         $this->showModal();
     }
     public function mount()
@@ -173,7 +183,6 @@ class Tablepembelian extends Component
     public function render()
     {
         $data = $this->get_pagination_data();
-
         return view($data['view'], $data);
     }
 }

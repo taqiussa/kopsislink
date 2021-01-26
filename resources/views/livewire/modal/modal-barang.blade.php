@@ -15,7 +15,7 @@
                     <div>
                         <div class="py-2">
                             <label for="namabarang">Nama Barang</label>
-                            <input wire:model="idbarang" type="hidden" class="w-full px-2 py-2 border rounded shadow appearance-non" id="namabarang" >
+                            <input wire:model="idbarang" type="hidden" class="w-full px-2 py-2 border rounded shadow appearance-non" id="idbarang" >
                             <input wire:model.defer="namabarang" type="text" class="w-full px-2 py-2 border rounded shadow appearance-non" id="namabarang" autocomplete="off" >
                             @error('namabarang')
                             <h1 class="text-red-500">{{ $message }}</h1>

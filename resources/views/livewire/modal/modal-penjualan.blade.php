@@ -15,17 +15,6 @@
                     <div>
                         <div class="flex items-center mb-2 space-x-4">
                             <div class="flex flex-col">
-                                <label class="leading-loose">Tanggal</label>
-                                <div class="relative text-gray-400 focus-within:text-gray-600">
-                                    <input wire:model.defer='tanggal' type="date" class="w-full py-2 pl-2 pr-4 text-gray-600 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-900 sm:text-sm focus:outline-none">
-                                    @error('tanggal')
-                                    <h1 class="text-red-500">{{ $message }}</h1>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex items-center mb-2 space-x-4">
-                            <div class="flex flex-col">
                                 <label class="leading-loose">Pilih Barang</label>
                                 <div class="relative text-gray-400 focus-within:text-gray-600">
                                     <input wire:model="idpembelian" type="hidden" class="w-full py-2 pl-2 pr-4 text-gray-600 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-900 sm:text-sm focus:outline-none" id="idpembelian" >
@@ -41,7 +30,7 @@
                             <div class="flex flex-col">
                                 <label class="leading-loose">Harga</label>
                                 <div class="relative text-gray-400 focus-within:text-gray-600">
-                                    <input wire:model.defer='hargabeli' type="text" class="w-full py-2 pl-2 pr-4 text-gray-600 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-900 sm:text-sm focus:outline-none" readonly>
+                                    <input wire:model.defer='hargajual' type="text" class="w-full py-2 pl-2 pr-4 text-gray-600 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-900 sm:text-sm focus:outline-none" readonly>
                                 </div>
                             </div>
                         </div>
@@ -49,7 +38,7 @@
                             <div class="flex flex-col">
                                 <label class="leading-loose">Jumlah</label>
                                 <div class="relative text-gray-400 focus-within:text-gray-600">
-                                    <input wire:model='jumlah' type="text" class="w-full py-2 pl-2 pr-4 text-gray-600 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-900 sm:text-sm focus:outline-none">
+                                    <input wire:model.debounce.500ms='jumlah' type="text" class="w-full py-2 pl-2 pr-4 text-gray-600 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-900 sm:text-sm focus:outline-none">
                                     @error('jumlah')
                                     <h1 class="text-red-500">{{ $message }}</h1>
                                     @enderror
@@ -59,6 +48,23 @@
                                 <label class="leading-loose">Total</label>
                                 <div class="relative text-gray-400 focus-within:text-gray-600">
                                     <input wire:model.defer='total' type="text" class="w-full py-2 pl-2 pr-4 text-gray-600 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-900 sm:text-sm focus:outline-none" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center mb-2 space-x-4">
+                            <div class="flex flex-col">
+                                <label class="leading-loose">Bayar</label>
+                                <div class="relative text-gray-400 focus-within:text-gray-600">
+                                    <input wire:model.debounce.300ms='bayar' type="text" class="w-full py-2 pl-2 pr-4 text-gray-600 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-900 sm:text-sm focus:outline-none">
+                                    @error('bayar')
+                                    <h1 class="text-red-500">{{ $message }}</h1>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="flex flex-col">
+                                <label class="leading-loose">Kembali</label>
+                                <div class="relative text-gray-400 focus-within:text-gray-600">
+                                    <input wire:model.defer='kembali' type="text" class="w-full py-2 pl-2 pr-4 text-gray-600 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-900 sm:text-sm focus:outline-none" readonly>
                                 </div>
                             </div>
                         </div>

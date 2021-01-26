@@ -36,10 +36,8 @@ class Tablestok extends Component
                     ->join('barang', 'barang.id', '=', 'stok.barang_id')
                     ->select(
                         'barang.namabarang as namabarang',
+                        'barang.keterangan as keterangan',
                         'stok.id as id',
-                        'stok.tanggal as tanggal',
-                        'stok.hargabeli as hargabeli',
-                        'stok.hargajual as hargajual',
                         'stok.jumlah as jumlah',
                     )
                     ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
