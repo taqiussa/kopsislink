@@ -1,12 +1,12 @@
 <div>
-    <x-data-table2 :data="$data" :model="$pembelians">
+    <x-data-table2 :data="$data" :model="$penjualans">
         <x-slot name="head">
             <tr>
                 <th>
                     #
                 </th>
                 <th><a wire:click.prevent="sortBy('tanggal')" role="button" href="#">
-                    Tanggal Input
+                    Tanggal Beli
                     @include('components.sort-icon', ['field' => 'tanggal'])
                 </a></th>
                 <th><a wire:click.prevent="sortBy('namabarang')" role="button" href="#">
@@ -14,7 +14,7 @@
                     @include('components.sort-icon', ['field' => 'namabarang'])
                 </a></th>
                 <th><a wire:click.prevent="sortBy('jumlah')" role="button" href="#">
-                    Jumlah pembelian
+                    Jumlah penjualan
                     @include('components.sort-icon', ['field' => 'jumlah'])
                 </a></th>
                 <th><a wire:click.prevent="sortBy('total')" role="button" href="#">
@@ -29,16 +29,16 @@
             </tr>
         </x-slot>
         <x-slot name="body">
-            @foreach ($pembelians as $key => $pembelian)
-                <tr x-data="window.__controller.dataTableController({{ $pembelian->id }})">
-                    <td>{{ $pembelians->firstItem() + $key }}</td>
-                    <td>{{ date('d M Y',strtotime($pembelian->tanggal)) }}</td>
-                    <td>{{ $pembelian->namabarang }}</td>
-                    <td>{{ $pembelian->jumlah }}</td>
-                    <td>{{ 'Rp ' . number_format($pembelian->total, 0, ",", ".").',-' }}</td>
-                    <td>{{ $pembelian->user }}</td>
+            @foreach ($penjualans as $key => $penjualan)
+                <tr x-data="window.__controller.dataTableController({{ $penjualan->id }})">
+                    <td>{{ $penjualans->firstItem() + $key }}</td>
+                    <td>{{ date('d M Y',strtotime($penjualan->tanggal))}}</td>
+                    <td>{{ $penjualan->namabarang }}</td>
+                    <td>{{ $penjualan->jumlah }}</td>
+                    <td>{{ 'Rp ' . number_format($penjualan->total, 0, ",", ".").',-' }}</td>
+                    <td>{{ $penjualan->user }}</td>
                     <td class="whitespace-no-wrap row-action--icon">
-                        {{-- <a role="button" wire:click="edit({{ $pembelian->id }})" class="mr-3"><i class="fa fa-16px fa-pen"></i></a> --}}
+                        {{-- <a role="button" wire:click="edit({{ $penjualan->id }})" class="mr-3"><i class="fa fa-16px fa-pen"></i></a> --}}
                         <a role="button" x-on:click.prevent="deleteItem" href="#"><i class="text-red-500 fa fa-16px fa-trash"></i></a>
                     </td>
                 </tr>
@@ -47,6 +47,6 @@
     </x-data-table2>
     <x-notify-message on="saved" type="success" :message="__($button['submit_response_notyf'])" />
     @if ($isOpen)
-    @include('livewire.modal.modal-pembelian')
+    @include('livewire.modal.modal-penjualan')
     @endif
 </div>

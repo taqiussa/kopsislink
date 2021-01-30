@@ -33,13 +33,6 @@ class Tablestok extends Component
         switch ($this->name) {
             case 'stok':
                 $stoks = $this->model::search($this->search)
-                    ->join('barang', 'barang.id', '=', 'stok.barang_id')
-                    ->select(
-                        'barang.namabarang as namabarang',
-                        'barang.keterangan as keterangan',
-                        'stok.id as id',
-                        'stok.jumlah as jumlah',
-                    )
                     ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                     ->paginate($this->perPage);
 

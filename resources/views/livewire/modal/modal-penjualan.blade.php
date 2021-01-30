@@ -9,15 +9,26 @@
                 <div class="px-4 pt-5 pb-4 bg-white sm:p-6 sm:pb-4">
                     <div class="text-center">
                         <h4>
-                            Pembelian Barang
+                            Penjualan Barang
                         </h4>
                     </div>
                     <div>
                         <div class="flex items-center mb-2 space-x-4">
                             <div class="flex flex-col">
+                                <label class="leading-loose">Tanggal</label>
+                                <div class="relative text-gray-400 focus-within:text-gray-600">
+                                    <input wire:model.defer='tanggal' type="date" class="w-full py-2 pl-2 pr-4 text-gray-600 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-900 sm:text-sm focus:outline-none">
+                                    @error('tanggal')
+                                    <h1 class="text-red-500">{{ $message }}</h1>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center mb-2 space-x-4">
+                            <div class="flex flex-col">
                                 <label class="leading-loose">Pilih Barang</label>
                                 <div class="relative text-gray-400 focus-within:text-gray-600">
-                                    <input wire:model="idpembelian" type="hidden" class="w-full py-2 pl-2 pr-4 text-gray-600 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-900 sm:text-sm focus:outline-none" id="idpembelian" >
+                                    <input wire:model="idpenjualan" type="hidden" class="w-full py-2 pl-2 pr-4 text-gray-600 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-900 sm:text-sm focus:outline-none" id="idpembelian" >
                                     
                                     <select wire:model="barang_id" class="w-full py-2 pl-2 pr-4 text-gray-600 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-900 sm:text-sm focus:outline-none">
                                         <option value="">Pilih Barang</option>
@@ -48,23 +59,6 @@
                                 <label class="leading-loose">Total</label>
                                 <div class="relative text-gray-400 focus-within:text-gray-600">
                                     <input wire:model.defer='total' type="text" class="w-full py-2 pl-2 pr-4 text-gray-600 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-900 sm:text-sm focus:outline-none" readonly>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex items-center mb-2 space-x-4">
-                            <div class="flex flex-col">
-                                <label class="leading-loose">Bayar</label>
-                                <div class="relative text-gray-400 focus-within:text-gray-600">
-                                    <input wire:model.debounce.300ms='bayar' type="text" class="w-full py-2 pl-2 pr-4 text-gray-600 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-900 sm:text-sm focus:outline-none">
-                                    @error('bayar')
-                                    <h1 class="text-red-500">{{ $message }}</h1>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="flex flex-col">
-                                <label class="leading-loose">Kembali</label>
-                                <div class="relative text-gray-400 focus-within:text-gray-600">
-                                    <input wire:model.defer='kembali' type="text" class="w-full py-2 pl-2 pr-4 text-gray-600 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-900 sm:text-sm focus:outline-none" readonly>
                                 </div>
                             </div>
                         </div>

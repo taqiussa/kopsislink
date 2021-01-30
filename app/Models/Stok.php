@@ -8,12 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Stok extends Model
 {
     use HasFactory;
-    protected $table = 'stok';
+    protected $table = 'barang';
     protected $guarded = [];
-    public function barang()
-    {
-        return $this->belongsTo(Barang::class);
-    }
+    // public function barang()
+    // {
+    //     return $this->belongsTo(Barang::class);
+    // }
     public static function search($query)
     {
         return empty($query) ? static::query()

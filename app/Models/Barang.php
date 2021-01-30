@@ -11,13 +11,17 @@ class Barang extends Model
     protected $table = 'barang';
     protected $guarded = [];
 
-    public function stok()
-    {
-        return $this->hasOne(Stok::class, 'barang_id');
-    }
+    // public function stok()
+    // {
+    //     return $this->hasOne(Stok::class, 'barang_id');
+    // }
     public function pembelian()
     {
         return $this->hasMany(Pembelian::class, 'barang_id');
+    }
+    public function penjualan()
+    {
+        return $this->hasMany(Penjualan::class, 'barang_id');
     }
     public static function search($query)
     {

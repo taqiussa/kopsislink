@@ -6,6 +6,7 @@ use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Http\Controllers\KopsisController;
+use App\Models\Stok;
 use Illuminate\Support\Facades\Auth;
 
 class Tablebarang extends Component

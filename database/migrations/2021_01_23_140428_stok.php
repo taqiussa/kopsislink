@@ -13,12 +13,12 @@ class Stok extends Migration
      */
     public function up()
     {
-        Schema::create('stok', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->foreignId('barang_id');
-            $table->integer('jumlah');
-            $table->timestamps();
-        });
+        // Schema::create('stok', function (Blueprint $table) {
+        //     $table->bigIncrements('id');
+        //     $table->foreignId('barang_id');
+        //     $table->integer('jumlah');
+        //     $table->timestamps();
+        // });
     }
 
     /**
@@ -28,6 +28,6 @@ class Stok extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('stok');
+        // Schema::dropIfExists('stok');
     }
 }
