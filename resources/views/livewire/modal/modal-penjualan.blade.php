@@ -36,7 +36,7 @@
                                         <option value="{{ $p->id }}">{{ $p->namabarang }}</option>
                                         @endforeach
                                     </select>
-                            </div>
+                                </div>
                             </div>
                             <div class="flex flex-col">
                                 <label class="leading-loose">Harga</label>
