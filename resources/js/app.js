@@ -20,7 +20,6 @@ function dataTableController (id) {
         }
     }
 }
-
 function dataTableMainController () {
     return {
         setCallback() {

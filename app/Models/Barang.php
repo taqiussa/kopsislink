@@ -23,6 +23,10 @@ class Barang extends Model
     {
         return $this->hasMany(Penjualan::class, 'barang_id');
     }
+    public function transaksi()
+    {
+        return $this->hasMany(Transaksi::class, 'barang_id');
+    }
     public static function search($query)
     {
         return empty($query) ? static::query()

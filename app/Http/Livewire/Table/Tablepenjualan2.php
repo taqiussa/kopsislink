@@ -12,9 +12,8 @@ use App\Http\Livewire\Table\Konversi;
 use App\Models\Pembelian;
 use App\Models\Penjualan;
 use App\Models\Stok;
-use App\Models\Transaksi;
 
-class Tablepenjualan extends Component
+class Tablepenjualan2 extends Component
 {
     use WithPagination;
 
@@ -34,32 +33,27 @@ class Tablepenjualan extends Component
     public $idpenjualan;
     public $tanggal;
     public $barang_id;
+    public $hargajual;
     public $total;
     public $jumlah;
-    public $stok;
-    public $info;
-    public $kembalian;
-    public $pembayaran;
 
     protected $rules = [
-        'barang_id' => 'required|unique:transaksi',
+        'barang_id' => 'required',
         'tanggal' => 'required',
         'jumlah' => 'required|numeric',
     ];
     protected $messages = [
         'barang_id.required' => 'Nama Barang Harus di isi',
-        'barang_id.unique' => 'Barang Tidak boleh sama',
         'jumlah.numeric' => 'Jumlah Harus Berupa Angka',
         'jumlah.required' => 'Jumlah Barang Harus di isi',
         'tanggal.required' => 'Tanggal Harus di isi',
     ];
-    protected $listeners = [
-        "deleteItem" => "delete_item"
-    ];
+    protected $listeners = ["deleteItem" => "delete_item"];
 
     public function showModal()
     {
         $this->isOpen = true;
+        //$cek = Auth::user()->name;
     }
     public function hideModal()
     {
@@ -95,38 +89,15 @@ class Tablepenjualan extends Component
                     )
                     ->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                     ->paginate($this->perPage);
-                $transaksi = Transaksi::join('barang', 'barang.id', '=', 'transaksi.barang_id')
-                    ->select(
-                        'barang.namabarang as namabarang',
-                        'transaksi.id as id',
-                        'transaksi.jumlah as jumlah',
-                        'transaksi.harga as harga',
-                        'transaksi.total as total',
-                    )
-                    ->orderBy('barang.namabarang', 'asc')->get();
                 $barang = Barang::get();
                 if (!empty($this->barang_id)) {
                     $cari = Barang::find($this->barang_id);
-                    $this->stok = 'Stok : ' . $cari->jumlah;
+                    $this->hargajual = Konversi::rupiah($cari->hargajual);
                 }
-                if (!empty($this->jumlah)) {
-                    $cari2 = Barang::find($this->barang_id);
-                    $cek = $cari2->jumlah - $this->jumlah;
-                    if ($cek < 0) {
-                        $this->info = 'Jumlah tidak boleh melebihi Stok';
-                    } else {
-                        $this->info = '';
-                    }
-                }
-                $totaljual = Transaksi::sum('total');
-                $this->total = Konversi::rupiah($totaljual);
-                Konversi::rupiah(intval($this->pembayaran));
-                $kembali = intval($this->pembayaran) - (Konversi::angka($totaljual));
-                $this->kembalian = Konversi::rupiah($kembali);
+                $this->total = Konversi::rupiah(intval($this->jumlah) * intval(Konversi::angka($this->hargajual)));
                 return [
                     "view" => 'livewire.table.penjualan',
                     "penjualans" => $penjualans,
-                    'transaksi' => $transaksi,
                     'barang' => $barang,
                     "data" => array_to_object([
                         'href' => [
@@ -149,33 +120,10 @@ class Tablepenjualan extends Component
 
         $this->barang_id = '';
         $this->jumlah = '';
-        $this->stok = '';
-        $this->info = '';
-        $this->pembayaran = '';
+        $this->hargajual = '';
+        $this->total = '';
+        $this->jumlah = '';
         $this->tanggal = gmdate('Y-m-d');
-    }
-    public function add()
-    {
-        $barang = Barang::where('id', $this->barang_id)->first();
-        $data = [
-            'tanggal' => $this->tanggal,
-            'barang_id' => $this->barang_id,
-            'jumlah' => $this->jumlah,
-            'harga' => $barang->hargajual,
-            'total' => ($barang->hargajual * $this->jumlah),
-            'user' => Auth::user()->name,
-        ];
-        $this->validate();
-        $cari2 = Barang::find($this->barang_id);
-        $cek = $cari2->jumlah - $this->jumlah;
-        if ($cek < 0) {
-            $this->info = 'Jumlah tidak boleh melebihi Stok';
-        } else {
-            $this->info = '';
-            Transaksi::create($data);
-            $this->emit('saved');
-        }
-        $this->clearVar();
     }
     public function store()
     {
@@ -199,10 +147,20 @@ class Tablepenjualan extends Component
         $this->emit('saved'); /* Untuk Menampilkan Message Toast ke x-jet-nofity-message di modal */
         $this->hideModal();
     }
+    public function edit($id)
+    {
+        $cari = $this->model::findOrFail($id);
+        $this->idpenjualan = $id;
+        $this->tanggal = date('Y-m-d', strtotime($cari->tanggal));
+        $this->barang_id = $cari->barang_id;
+        $this->jumlah = $cari->jumlah;
+        $this->showModal();
+    }
     public function mount()
     {
         $this->button = create_button($this->action, 'Barang');
         // this button untuk menampilkan emit atau message toast 
+
     }
     public function delete_item($id)
     {
@@ -214,25 +172,18 @@ class Tablepenjualan extends Component
             ]);
             return;
         }
+        $barang = Barang::where('id', $data->barang_id)->first();
+        $jumlahdelete = $data->jumlah;
+        $jumlahbaru = $barang->jumlah + $jumlahdelete;
+        $datastok = [
+            'jumlah' => $jumlahbaru,
+        ];
+        Barang::updateOrCreate(['id' => $data->barang_id], $datastok);
         $data->delete();
         $this->emit('deleteResult', [
             'status' => true,
             'message' => 'Data ' . $this->name . ' berhasil di hapus !'
         ]);
-    }
-    public function delete_t($id)
-    {
-
-        $data = Transaksi::find($id);
-        if (!$data) {
-            $this->emit('deleteResult', [
-                'status' => false,
-                'message' => 'Gagal menghapus data Transaksi'
-            ]);
-            return;
-        }
-        $data->delete();
-        $this->emit('saved');
     }
 
     public function render()
