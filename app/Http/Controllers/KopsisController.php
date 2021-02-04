@@ -34,4 +34,8 @@ class KopsisController extends Controller
             'penjualan' => Penjualan::class
         ]);
     }
+    public function laporan()
+    {
+        return view('pages.kopsis.laporan-data');
+    }
 }

@@ -15,22 +15,6 @@ $links =
         ],  
     ],
     [
-        "header_text" => "Admin User",
-        "is_multi" => true,
-        "href" => 
-        [
-            [
-                "section_text" => "User",
-                "section_icon" => "far fa-user",
-                "section_list" => 
-                [
-                    ["href" => "user", "text" => "Data User"],
-                    ["href" => "user.new", "text" => "Buat User"]
-                ]
-            ]
-        ],
-    ],
-    [
         "header_text" => "Kopsis Binus",
         "is_multi" => false,
         "list" => 
@@ -60,17 +44,11 @@ $links =
                 ],
             ],
             [
-                "text" => "Pegawai",
-                "icon" => "far fa-address-book",
-                "href" => "barang",
+                "text" => "Laporan",
+                "icon" => "far fa-file",
+                "href" => "laporan",
                 "is_dropdown" => false,
             ],
-            [
-                "text" => "Keterangan",
-                "icon" => "fas fa-tags",
-                "href" => "barang",
-                "is_dropdown" => false,
-            ]
         ],
     ],
 ];

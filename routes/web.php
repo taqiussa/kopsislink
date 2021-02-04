@@ -22,12 +22,13 @@ Route::get('/', function () {
 Route::group(["middleware" => ['auth:sanctum', 'verified']], function () {
     Route::view('/dashboard', "dashboard")->name('dashboard');
 
-    Route::get('/user', [UserController::class, "index_view"])->name('user');
-    Route::view('/user/new', "pages.user.user-new")->name('user.new');
-    Route::view('/user/edit/{userId}', "pages.user.user-edit")->name('user.edit');
+    // Route::get('/user', [UserController::class, "index_view"])->name('user');
+    // Route::view('/user/new', "pages.user.user-new")->name('user.new');
+    // Route::view('/user/edit/{userId}', "pages.user.user-edit")->name('user.edit');
 
     Route::get('/barang', [KopsisController::class, "barang"])->name('barang');
     Route::get('/stok', [KopsisController::class, "stok"])->name('stok');
     Route::get('/pembelian', [KopsisController::class, "pembelian"])->name('pembelian');
     Route::get('/penjualan', [KopsisController::class, "penjualan"])->name('penjualan');
+    Route::get('/laporan', [KopsisController::class, "laporan"])->name('laporan');
 });

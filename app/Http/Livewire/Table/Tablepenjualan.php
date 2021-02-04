@@ -12,6 +12,7 @@ use App\Http\Livewire\Table\Konversi;
 use App\Models\Pembelian;
 use App\Models\Penjualan;
 use App\Models\Stok;
+use App\Models\Trans;
 use App\Models\Transaksi;
 
 class Tablepenjualan extends Component
@@ -179,24 +180,24 @@ class Tablepenjualan extends Component
     }
     public function store()
     {
-        $data = [
-            'barang_id' => $this->barang_id,
-            'total' => Konversi::angka($this->total),
-            'jumlah' => $this->jumlah,
-            'tanggal' => $this->tanggal,
-            'user' => Auth::user()->name,
-        ];
-        $this->validate();
-        $this->model::updateOrCreate(['id' => $this->idpenjualan], $data);
-        $barang = Barang::where('id', $this->barang_id)->first();
-        $jumlahstok = $barang->jumlah;
-        $jumlahbaru = $jumlahstok - $this->jumlah;
-        $datastok = [
-            'jumlah' => $jumlahbaru,
-        ];
-        Barang::updateOrCreate(['id' => $this->barang_id], $datastok);
+        $trans = Transaksi::get();
+        foreach ($trans as $t) {
+            $data = [
+                'tanggal' => $t->tanggal,
+                'barang_id' => $t->barang_id,
+                'jumlah' => $t->jumlah,
+                'total' => $t->total,
+                'user' => $t->user,
+            ];
+            $jumlahjual = $t->jumlah;
+            $barang = Barang::where('id', $t->barang_id)->first();
+            $jumlahstok = ($barang->jumlah) - $jumlahjual;
+            Barang::where('id', $t->barang_id)->update(['jumlah' => $jumlahstok]);
+            Penjualan::create($data);
+        }
+        Transaksi::truncate();
         $this->clearVar();
-        $this->emit('saved'); /* Untuk Menampilkan Message Toast ke x-jet-nofity-message di modal */
+        $this->emit('saved');
         $this->hideModal();
     }
     public function mount()
@@ -214,6 +215,9 @@ class Tablepenjualan extends Component
             ]);
             return;
         }
+        $barang = Barang::find($data->barang_id);
+        $jumlahbaru = $barang->jumlah + $data->jumlah;
+        $barang->update(['jumlah' => $jumlahbaru]);
         $data->delete();
         $this->emit('deleteResult', [
             'status' => true,
